@@ -1,0 +1,68 @@
+{% extends 'base-login.html' %}
+{% load static %}
+
+{% block title %}
+    <title>ASR Lab - 注册</title>
+{% endblock %}
+
+{% block main %}
+    <!-- login register -->
+    <form id="register" autocomplete="off">
+        <div class="logo">
+            <img class="mb-4" src="{% static 'images/svg/openai.svg' %}" alt="" width="80" height="80"/>
+        </div>
+        <h1 class="h4 mb-4 fw-normal">注册账号</h1>
+
+        <div class="form-floating">
+            <input data-type="register"
+                   name="email"
+                   type="email"
+                   class="form-control"
+                   id="floatingInput"
+                   placeholder="name@example.com"/>
+            <label for="floatingInput">注册邮箱地址</label>
+        </div>
+
+        <div class="form-floating">
+            <input data-type="register"
+                   name="password_1"
+                   type="password"
+                   class="form-control form-bg"
+                   id="floatingPassword"
+                   placeholder="Password"
+            />
+            <label for="floatingPassword">输入密码</label>
+        </div>
+
+        <div class="form-floating">
+            <input data-type="register"
+                   name="password_2"
+                   type="password"
+                   class="form-control form-bg"
+                   id="floatingPasswordComfirm"
+                   placeholder="Comfirm Password"
+            />
+            <label for="floatingPasswordComfirm">确认密码</label>
+        </div>
+
+        <div class="form-floating captcha">
+            <div>
+                <input data-type="captcha"
+                       name="captcha-input"
+                       class="form-control"
+                       id="captcha"
+                       type="text"
+                       placeholder="验证码"/>
+                {{ captchaForm.captcha }}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button data-type="confrim-register" class="btn btn-primary w-50 p-1" type="submit"
+                    target="{% url 'users:login' %}">确认注册
+            </button>
+        </div>
+        {% csrf_token %}
+    </form>
+    <!-- register end -->
+{% endblock %}

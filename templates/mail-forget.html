@@ -1,0 +1,7 @@
+{% extends 'base-mail.html' %}
+
+{% block header %}忘记密码{% endblock %}
+
+{% block main %}
+    <p>您好，{{ addressee|default:"" }}</p><p>请点击该链接完成密码重置：<br>{{ code|default:"" }}</p>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    {% block title %}
+        <title>ASR Lab</title>
+    {% endblock %}
+
+    <link href="{% static 'css/main.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/apps.css' %}" rel="stylesheet"/>
+    {% block external-css %}
+    {% endblock %}
+</head>
+<body>
+<main>
+    <!-- navbar start -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <!-- app name -->
+            <a style="user-select: none" class="navbar-brand">{% block app-name %}{% endblock %}</a>
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar"
+                    aria-controls="offcanvasNavbarLight"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- sidebar start -->
+            <div
+                    class="offcanvas offcanvas-end sidebar-width"
+                    tabindex="-1"
+                    id="offcanvasNavbar"
+                    aria-labelledby="offcanvasNavbarLabel"
+            >
+                <div class="offcanvas-header">
+                    <!-- sidebar title -->
+                    <img src="{% static 'images/svg/openai.svg' %}" alt="" width="40" height="40"/>
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">ASR Lab</h5>
+                    <!-- sidebar close button -->
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <!-- sidebar content -->
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item {% block active-stt %}{% endblock %}">
+                            <a class="nav-link" aria-current="page" href="{% url 'sttapp:app' %}">
+                                <img src="{% static 'images/svg/text.svg' %}" alt=""/>
+                                中文语音转文字
+                            </a>
+                        </li>
+
+                        <li class="nav-item  {% block active-chat %}{% endblock %}">
+                            <a class="nav-link" href="{% url 'chatapp:app' %}">
+                                <img src="{% static 'images/svg/robot.svg' %}" alt=""/>
+                                中文语音聊天机器人
+                            </a>
+                        </li>
+
+                        <li class="nav-item  {% block active-setting %}{% endblock %}">
+                            <a class="nav-link" href="{% url 'users:settings' %}">
+                                <img src="{% static 'images/svg/setting.svg' %}" alt=""/>
+                                用户设置
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% block logout %}{% endblock %}" href="{% url 'users:logout' %}">
+                                <img src="{% static 'images/svg/logout.svg' %}" alt=""/>
+                                退出登录
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="user">
+                    <img class="rounded-circle" src="{% static 'images/svg/user.svg' %}" alt="" width="35" height="35"/>
+                    <strong>
+                        {% if request.user.nickname == "" %}
+                            {{ request.user.email }}
+                        {% else %}
+                            {{ request.user.nickname }}
+                        {% endif %}
+                    </strong>
+                </div>
+            </div>
+            <!-- sidebar end -->
+        </div>
+    </nav>
+    <!-- navbar end -->
+
+    <!-- content start -->
+    <div class="container">
+        <!-- alert-box start -->
+        <div id="alert-box" class="alert align-items-center" role="alert" style="display: none !important;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+                 width="20"
+                 height="20"
+                 viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+            </svg>
+            {% block alert-box %}
+                <span>{{ message|default:"" }}</span>
+            {% endblock %}
+        </div>
+        <!-- alert-box end -->
+
+        <!-- main start -->
+        {% block main %}
+
+        {% endblock %}
+        <!-- main end -->
+    </div>
+    <!-- content end -->
+
+</main>
+</body>
+
+<script src="{% static '/js/main.bundle.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+{% block external-js %}
+{% endblock %}
+</html>

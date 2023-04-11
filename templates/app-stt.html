@@ -1,0 +1,69 @@
+{% extends 'base-app.html' %}
+{% load static %}
+
+{% block title %}
+    <title>ASR Lab - STT</title>
+{% endblock %}
+
+{% block external-js %}
+    <script src="{% static 'js/stt.js' %}"></script>
+{% endblock %}
+
+{% block app-name %}
+    <img src="{% static 'images/svg/text.svg' %}" alt=""/>
+    中文语音转文字
+{% endblock %}
+
+{% block active-stt %}
+    nav-item-active
+{% endblock %}
+
+{% block main %}
+    <div class="p-3 rounded">
+        <h3 class="text-center m-3"><strong>中文音频 语音转文字</strong></h3>
+        <div class="file-upload" id="fileArea">
+            <!-- 处理界面 -->
+            <div id="uploaded" class="mt-4 text-center" style="display: none">
+                <img class="mb-3" src="{% static 'images/svg/audio.svg' %}" alt="" width="40" height="45"/>
+                <p class="text-light"><strong></strong></p>
+                <div id="process">
+                    <span name="handle" class="spinner-border text-light"></span>
+                    <p name="handle">正在处理...</p>
+                </div>
+            </div>
+            <!-- 上传操作界面 -->
+            <form action="" id="uploadForm" enctype="multipart/form-data" method="post">
+                <input type="file" name="filePath" id="fileInput" accept=".mp3, .wav" hidden/>
+                {% csrf_token %}
+            </form>
+            <button id="fileUpload" class="btn btn-primary p-2 mt-5 mb-4" onclick="$('#fileInput').click()">点击上传文件
+            </button>
+
+            <p class="text-center mt-2 mb-4 text-light">
+                请上传需要转换的音频文件<br/>
+                支持的格式为：<strong>*.mp3, *.wav</strong>
+            </p>
+        </div>
+        <div class="p-2">
+            <div id="resultText" style="display: none">
+                <h5 style="font-size: 1em"><strong>转换结果</strong></h5>
+                <hr class="my-2"/>
+                <p>
+                </p>
+            </div>
+
+            <div>
+                <h5 style="font-size: 1em"><strong>功能介绍</strong></h5>
+                <hr class="my-2"/>
+                <p>
+                    在线语音转文字，可以直接把音频格式文件转换为文本格式文件。
+                    支持多种主流的音频格式智能AI自动识别后转换为文字内容，进行使用。可应用于文字录入、搜索交互等领域。
+                </p>
+
+                <h5 style="font-size: 1em"><strong>操作指南</strong></h5>
+                <hr class="my-2"/>
+                <p>将需要转换的音频文件上传至系统，等待处理后即可在界面查看转换结果。</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

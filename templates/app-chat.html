@@ -1,0 +1,150 @@
+{% extends 'base-app.html' %}
+{% load static %}
+
+{% block title %}
+    <title>ASR Lab - ChatBot</title>
+{% endblock %}
+
+{% block external-css %}
+    <link href="{% static 'css/chat.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block external-js %}
+    <script src="{% static 'js/recorder.min.js' %}"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script src="{% static 'js/ejs.min.js' %}"></script>
+    <script id="messageTemplate" type="text/x-ejs-template">
+        <% if (sender === "user") { %>
+        <div class="outgoing-message text-start mb-2">
+            <div class="outgoing-message-bubble"><p><%= text %></p>
+                <span class="message-timestamp"><%= sendTime %></span></div>
+        </div>
+        <% } else { %>
+        <div class="incoming-message mb-2">
+            <div class="incoming-message-bubble"><p><%= text %></p>
+                <span class="message-timestamp"><%= sendTime %></span>
+            </div>
+        </div>
+        <% } %>
+    </script>
+
+    <script id="sessionItemTemplate" type="text/x-ejs-template">
+        <li><a class="dropdown-item" href="#" data-id="<%= id %>"><%= name %></a></li>
+    </script>
+
+    <script>
+        const messageTemplate = ejs.compile($('#messageTemplate').html());
+        const sessionItemTemplate = ejs.compile($('#sessionItemTemplate').html());
+    </script>
+{% endblock %}
+
+{% block app-name %}
+    <img src="{% static 'images/svg/robot.svg' %}" alt=""/>
+    语音聊天机器人
+{% endblock %}
+
+{% block active-chat %}
+    nav-item-active
+{% endblock %}
+
+{% block main %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+            <div class="card chat-card">
+                {% csrf_token %}
+                <!-- header start -->
+                <div class="card-header p-0">
+                    <div class="chat-header text-white p-2 ps-3 pe-2 d-flex justify-content-between align-items-center">
+                        <!-- session list -->
+                        <div class="dropdown">
+                            <a id="currentSession" class="btn btn-primary dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if sessionsList|length == 0 %}
+                                    新会话
+                                {% else %}
+                                    {{ sessionsList.0.sessionName }}
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% for item in sessionsList %}
+                                    {% if forloop.counter0 == 0 %}
+                                        <li><a class="dropdown-item active" href="#" aria-current="true" data-id="{{ item.sessionId }}">{{ item.sessionName }}</a></li>
+                                    {% else %}
+                                        <li><a class="dropdown-item" href="#" data-id="{{ item.sessionId }}">{{ item.sessionName }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- logo -->
+                        <h5><img src="{% static 'images/svg/openai.svg' %}" alt="" width="20" height="20">ChatGPT</h5>
+                    </div>
+                </div>
+                <!-- header end -->
+
+                <div class="card-body px-0 pt-0 pb-2">
+                    <!-- message start -->
+                    <div id="chatContent" class="chat-box pe-3 ps-3 pb-3" data-url="{% url 'chatapp:session' %}">
+                        <span id="handle" class="mt-3 spinner-border text-primary" style="display: none"></span>
+                    </div>
+                    <!-- message end -->
+
+                    <!-- send-input end -->
+                    <input type="hidden" name="ws-connect" data-url="{{ ws_url }}">
+                    <div id="sendInput" class="input-group">
+                        <button id="mic" class="btn-mic" data-bs-toggle="modal" data-bs-target="#sttModal">
+                            <img src="{% static 'images/svg/mic.svg' %}" alt="">
+                        </button>
+                        <input id="message" type="text" class="form-control chat-input"
+                               placeholder="请输入内容...">
+                        <button type="button" class="btn-send" id="sendMessage" onclick="sendUserMessage()">
+                            <img src="{% static 'images/svg/send.svg' %}" alt="" style="filter: invert()">
+                        </button>
+                    </div>
+                    <!-- send-input end -->
+                </div>
+
+                <!-- audio modal start -->
+                <div class="modal fade" id="sttModal" tabindex="-1" aria-labelledby="sttModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- modal title -->
+                            <div class="modal-header">
+                                <h5 class="modal-title">语音转文字</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+
+                            <!-- modal main content -->
+                            <div class="modal-body">
+                                <div id="modalButtonGroup" class="modal-btn-group">
+                                    <!-- mic button -->
+                                    <button id="recoding" type="button" class="btn btn-danger me-5">录音
+                                    </button>
+
+                                    <!-- file upload -->
+                                    <form action="" id="uploadForm" enctype="multipart/form-data" method="post">
+                                        <input type="file" name="filePath" id="fileInput" accept=".mp3, .wav"
+                                               hidden/>
+                                    </form>
+                                    <button id="fileUpload" class="btn btn-primary"
+                                            onclick="$('#fileInput').click()" target="{% url 'sttapp:app' %}">
+                                        上传文件
+                                    </button>
+                                </div>
+                                <!-- handle tips -->
+                                <div name="audioHandle" style="display: none">
+                                    <span class="spinner-border text-primary mb-3 mt-1"></span>
+                                    <p>正在处理...</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- audio-modal end -->
+            </div>
+        </div>
+    </div>
+{% endblock %}

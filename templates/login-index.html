@@ -1,0 +1,112 @@
+{% extends 'base-login.html' %}
+{% load static %}
+
+{% block title %}
+    <title>ASR Lab - 登录</title>
+{% endblock %}
+
+{% block external-js %}
+    <script>
+        if (window.location.href.match(/\bactive\b/) !== null) {
+            let $tips = $("#alert-box")
+            $tips.addClass("alert-success");
+            $tips.fadeIn('slow');
+            setInterval(function () {
+                window.location.reload("{% url 'users:login' %}");
+            }, 1000)
+        }
+    </script>
+{% endblock %}
+
+{% block main %}
+    <!-- login start -->
+    <form id="login" autocomplete="off">
+        <div class="logo">
+            <img class="mb-4" src="{% static 'images/svg/openai.svg' %}" alt="" width="80" height="80"/>
+        </div>
+        <h1 class="h4 mb-4 fw-normal">ASR Lab</h1>
+
+        <div class="form-floating">
+            <input name="email" type="email" class="form-control form-bg" id="floatingInput"
+                   placeholder="name@example.com" required/>
+            <label for="floatingInput">邮箱地址</label>
+        </div>
+
+        <div class="form-floating">
+            <input name="password" type="password" class="form-control form-bg" id="floatingPassword"
+                   placeholder="Password" required/>
+            <label for="floatingPassword">密码</label>
+        </div>
+
+        <div class="mt-4">
+            <div class="bth-group">
+                <button class="btn btn-primary w-25 p-1" type="submit" data-type="login"
+                        target="{% url 'sttapp:app' %}">
+                    登录
+                </button>
+                <button class="btn btn-primary w-25 p-1" type="submit" data-type="register"
+                        target="{% url 'users:register' %}">
+                    注册
+                </button>
+            </div>
+        </div>
+        <div class="mt-4">
+            <small class="text-muted"><a href="#forget" onclick="forgetPassword(is_return=false)">忘记密码</a></small>
+        </div>
+
+        <div>
+            <hr class="my-3"/>
+            <small class="text-muted">使用第三方账号登录</small>
+        </div>
+
+        <div class="oauth">
+            <a href="#" title="QQ登录">
+                <img src="{% static 'images/svg/qq.svg' %}" alt="" width="25" height="30"/>
+            </a>
+        </div>
+    </form>
+    <!-- login end -->
+
+    <!-- forget start -->
+    <form id="forget" style="display: none" autocomplete="off">
+        <div class="logo">
+            <img class="mb-4" src="{% static 'images/svg/openai.svg' %}" alt="" width="80" height="80"/>
+        </div>
+        <h1 class="h4 mb-5 fw-normal">忘记密码</h1>
+
+        <div class="form-floating">
+            <input data-type="forget"
+                   name="email"
+                   type="email"
+                   class="form-control form-bg"
+                   id="floatingInputFoeget"
+                   placeholder="name@example.com"
+                   required
+            />
+            <label for="floatingInputForget">邮箱地址</label>
+        </div>
+
+        <div class="form-floating captcha mt-2">
+            <div>
+                <input data-type="captcha"
+                       name="captcha-input"
+                       class="form-control"
+                       id="captcha"
+                       type="text"
+                       placeholder="验证码 (点击刷新)"
+                       required
+                />
+                {{ captchaForm.captcha }}
+            </div>
+        </div>
+
+        <button data-type="forget" class="btn btn-primary w-50 p-1 mt-5" type="submit"
+                target="{% url 'users:forget' %}">发送重置链接
+        </button>
+        <div class="mt-4">
+            <small class="text-muted"><a href="#" onclick="forgetPassword(is_return=true)">返回登录</a></small>
+        </div>
+    </form>
+    {% csrf_token %}
+    <!-- forget end -->
+{% endblock %}

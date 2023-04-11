@@ -1,0 +1,126 @@
+.accordion-item {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+    margin-top: 0.4em;
+}
+
+.accordion-button {
+    border-radius: 5px;
+}
+
+.accordion-body {
+    max-height: 25em;
+    overflow: scroll;
+}
+
+.accordion-body::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.accordion-body::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.accordion-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #888;
+}
+
+.accordion-body::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+input[name='captcha_1'] {
+    display: none;
+}
+
+.captcha {
+    cursor: pointer;
+    width: 6em;
+    max-width: 6em;
+    max-height: 2.5em;
+    min-height: 2.5em;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.bth-group {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.input-group-text {
+    padding: 0;
+}
+
+.alert {
+    display: flex;
+    position: absolute;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    top: 10%;
+    left: 50%;
+    font-size: 0.94em;
+    text-align: center;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+table {
+    font-size: 0.9em;
+}
+
+tbody img {
+    user-select: none;
+}
+
+.session-btn-group {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.session-btn-group img {
+    margin-right: 0.6em;
+    cursor: pointer;
+}
+
+#addSession {
+    margin-top: 1em;
+    font-size: 0.9em;
+    width: 8em;
+}
+
+.accordion-body, .d-flex {
+    flex-direction: column;
+    align-items: center;
+}
+
+#remove {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.modal h5 {
+    font-size: 1.1em;
+}
+
+@media (max-width: 450px) {
+    .alert {
+        width: 56%;
+    }
+}
+
+@media (max-width: 400px) {
+    .alert {
+        width: 58%;
+    }
+}

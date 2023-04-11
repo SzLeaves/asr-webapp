@@ -1,0 +1,25 @@
+{
+    "DATABASE": {
+        "MYSQL": {
+            "HOST": "",
+            "PORT": 3306,
+            "USER": "",
+            "PASSWORD": ""
+        },
+        "REDIS": {
+            "HOST": "",
+            "PORT": 6379,
+            "PASSWORD": ""
+        }
+    },
+    "EMAIL": {
+        "HOST": "",
+        "PORT": 25,
+        "USER": "",
+        "PASSWORD": ""
+    },
+    "BOT": {
+        "API_URL": "",
+        "API_KEY": ""
+    }
+}

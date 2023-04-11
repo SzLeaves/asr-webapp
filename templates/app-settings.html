@@ -1,0 +1,209 @@
+{% extends 'base-app.html' %}
+{% load static %}
+
+{% block title %}
+    <title>ASR Lab - Settings</title>
+{% endblock %}
+
+{% block external-css %}
+    <link href="{% static 'css/settings.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block external-js %}
+    <script type="module" src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'js/ejs.min.js' %}"></script>
+    <script id="recordTemplate" type="text/x-ejs-template">
+        <tr data-id="<%= id %>">
+            <td><%= name %></td>
+            <td><%= startTime %></td>
+            <td></td>
+            <td>
+                <div class="session-btn-group" data-id="<%= id %>">
+                    <img data-type="edit" src="{% static 'images/svg/edit.svg' %}" alt="">
+                    <img data-type="remove" src="{% static 'images/svg/del.svg' %}" alt="">
+                </div>
+            </td>
+        </tr>
+    </script>
+
+    <script>
+        const recordTemplate = ejs.compile($('#recordTemplate').html());
+    </script>
+{% endblock %}
+
+{% block app-name %}
+    <img src="{% static 'images/svg/setting.svg' %}" alt=""/>
+    用户设置
+{% endblock %}
+
+{% block active-stt %}
+    nav-item-active
+{% endblock %}
+
+{% block main %}
+    <div class="p-3 rounded">
+        <div class="accordion" id="settings">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="resetPassword">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#resetCollapse" aria-expanded="true" aria-controls="collapseReset">
+                        重置密码
+                    </button>
+                </h2>
+                <div id="resetCollapse" class="accordion-collapse collapse show" aria-labelledby="headingReset"
+                     data-bs-parent="#settings">
+                    <div class="accordion-body">
+                        <div class="input-group mb-3">
+                            <input id="password_1" type="password" class="form-control" placeholder="新密码"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input id="password_2" type="password" class="form-control" placeholder="确认新密码"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input id="captcha-input" type="text" class="form-control"
+                                   placeholder="验证码 (点击刷新)"/>
+                            <span class="input-group-text"
+                                  id="basic-addon2">{{ infoCaptchaForm.captcha }}</span>
+                        </div>
+                        <div class="bth-group">
+                            <button id="reset" class="btn btn-primary w-25 p-1" type="button"
+                                    target="{% url 'users:login' %} ">
+                                重置密码
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="transform">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#transformCollapse" aria-expanded="false" aria-controls="collapseTrans">
+                        转换记录
+                    </button>
+                </h2>
+                <div id="transformCollapse" class="accordion-collapse collapse" aria-labelledby="headingTrans"
+                     data-bs-parent="#settings">
+                    <div class="accordion-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">文件名称</th>
+                                <th scope="col">上传时间</th>
+                                <th scope="col">转换内容</th>
+                                <th scope="col">转换时长</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="transHistories" data-url="{% url 'sttapp:delete' %}">
+                            {% for item in histories %}
+                                <tr>
+                                    <td>{{ item.fileName }}</td>
+                                    <td>{{ item.handleTime|date:"Y年m月d日 H:i:s" }}</td>
+                                    <td>{% if item.content == None %}{% else %}{{ item.content }}{% endif %}</td>
+                                    <td>{{ item.times }}秒</td>
+                                    <td><a href="" class="delete" data-id="{{ item.id }}">
+                                        <img src="{% static 'images/svg/del.svg' %}">
+                                    </a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="transform">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#sessionCollapse" aria-expanded="false" aria-controls="collapseSess">
+                        会话记录
+                    </button>
+                </h2>
+                <div id="sessionCollapse" class="accordion-collapse collapse" aria-labelledby="headingSess"
+                     data-bs-parent="#settings">
+                    <div class="accordion-body d-flex">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">会话名称</th>
+                                <th scope="col">创建时间</th>
+                                <th scope="col">最后访问时间</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="sessionHistories" data-url="{% url 'sttapp:delete' %}">
+                            {% for item in sessions %}
+                                <tr data-id="{{ item.sessionId }}">
+                                    <td>{{ item.sessionName }}</td>
+                                    <td>{{ item.startTime|date:"Y年m月d日 H:i:s" }}</td>
+                                    <td>{{ item.endTime|date:"Y年m月d日 H:i:s" }}</td>
+                                    <td>
+                                        <div class="session-btn-group" data-id="{{ item.sessionId }}">
+                                            <img data-type="edit" src="{% static 'images/svg/edit.svg' %}" alt="">
+                                            <img data-type="remove" src="{% static 'images/svg/del.svg' %}" alt="">
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <button id="addSession" class="btn btn-primary p-1" type="button"
+                                target="{% url 'users:login' %} ">
+                            添加会话
+                        </button>
+                    </div>
+                </div>
+
+                <!-- session modal start -->
+                <div class="modal fade" data-bs-backdrop="static" id="sessionModal" tabindex="-1"
+                     aria-labelledby="sessionModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sessionModalLabel"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div id="sessionGroup" class="modal-body">
+                                <div id="adds" style="display: none" title="添加会话"
+                                     data-url="{% url 'chatapp:adds' %}">
+                                    <input name="new-input" type="text" class="form-control"
+                                           placeholder="输入新会话名称">
+                                </div>
+                                <div id="edit" style="display: none" title="修改会话名称"
+                                     data-url="{% url 'chatapp:edit' %}">
+                                    <input name="edit-input" type="text" class="form-control"
+                                           placeholder="输入修改的会话名称">
+                                </div>
+                                <div id="remove" style="display:none" title="删除会话"
+                                     data-url="{% url 'chatapp:remove' %}">
+                                    <p>是否删除？删除的会话将无法恢复</p>
+                                    <div class="modal-bth-group mb-3 mt-2">
+                                        <button type="button" class="btn btn-danger me-2" data-type="delete-btn">删除
+                                        </button>
+                                        <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+                                            取消
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        data-type="cancel">取消
+                                </button>
+                                <button type="button" class="btn btn-primary" data-type="save-btn">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- session modal end -->
+            </div>
+
+            {% csrf_token %}
+        </div>
+    </div>
+{% endblock %}
