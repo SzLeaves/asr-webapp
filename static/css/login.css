@@ -175,9 +175,3 @@ small a:hover {
     pointer-events: none;
     -webkit-user-drag: none;
 }
-
-.oauth {
-    margin-top: 10px;
-    padding: 0;
-    user-select: none;
-}
