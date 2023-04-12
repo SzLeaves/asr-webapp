@@ -6,7 +6,7 @@
 * Django-Channels: 聊天室组件 (WebSocket)
 * MySQL:     数据持久化
 * Redis:     消息缓存
-* jQuery/BootStrap5: 前端组件库
+* jQuery/Bootstrap5: 前端组件库
 * Tensorflow: 语音识别模型
 * PaddlePaddle ([ppasr](https://github.com/yeyupiaoling/PPASR)): 标点符号预测模型
 
