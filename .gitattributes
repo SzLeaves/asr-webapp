@@ -1,3 +1,6 @@
 data/** filter=lfs diff=lfs merge=lfs -text
 data/asr_models/* filter=lfs diff=lfs merge=lfs -text
 data/pun_models/* filter=lfs diff=lfs merge=lfs -text
+
+*.cs linguist-language=Python
+*.ico linguist-language=Python
