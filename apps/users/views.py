@@ -7,11 +7,11 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from asrlab.settings import logger
+from utils.mail import MailSender
 from chatapp.models import Conversation
 from sttapp.models import SpeechToText
 from users.forms import LoginForm, ForgetPasswordForm, RegisterForm
 from users.forms import ResetPasswordForm, UserInfoResetPasswordForm
-from users.mail import MailSender
 from users.mixin import LoginRequiredMixin
 from users.models import UserProfile, EmailVerifyRecord
 
@@ -58,9 +58,12 @@ class UserLoginView(View):
             # 验证记录
             user = authenticate(username=email, password=password)
             if user is not None:
-                # 登录成功
-                login(request, user)
-                return JsonResponse({"status": "success", "message": "登录成功"})
+                if user.is_active:
+                    # 登录成功
+                    login(request, user)
+                    return JsonResponse({"status": "success", "message": "登录成功"})
+                else:
+                    return JsonResponse({"status": "error", "message": "账号未激活"})
 
         return JsonResponse({"status": "error", "message": "账户不存在或密码错误"})
 
@@ -111,6 +114,7 @@ class UserResetPasswordView(View):
     def post(self, request, verify_code):
         savedRecord = EmailVerifyRecord.objects.filter(code=verify_code)
         if len(savedRecord) == 1:
+            logout(request)
             resetForm = ResetPasswordForm(request.POST)
             if resetForm.is_valid():
                 password = request.POST.get("password_1")
@@ -166,19 +170,21 @@ class UserActiveView(View):
     """
 
     def get(self, request, verify_code):
+        logout(request)
         savedRecord = EmailVerifyRecord.objects.filter(code=verify_code)
         if len(savedRecord) == 1:
             # 获取验证码对应邮箱
             email = savedRecord[0].addressee
             # 获取邮箱对应用户
-            user = UserProfile.objects.get(email=email)
-            # 激活用户
-            user.is_active = True
-            user.save()
-            # 使当前验证码失效
-            savedRecord.delete()
+            user = UserProfile.objects.filter(email=email)
+            if len(user) == 1:
+                # 激活用户
+                user[0].is_active = True
+                user[0].save()
+                # 使当前验证码失效
+                savedRecord.delete()
 
-            return render(request, "login-index.html", {"message": "账号激活成功, 请稍后"})
+                return render(request, "login-index.html", {"message": "账号激活成功, 请稍后"})
 
         # 验证码失效时重定向回登录页
         return redirect("users:login")

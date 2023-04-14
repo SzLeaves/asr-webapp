@@ -178,16 +178,31 @@ div[name='audioHandle'] {
     flex-direction: column;
 }
 
-@media (min-width: 768px) {
+
+@media screen and (min-width: 1240px) {
+    .container, .my-5 {
+        max-width: 70%;
+    }
+
+    .col-md-10 {
+        flex: 0 0 auto;
+        width: 75%;
+    }
+}
+
+@media screen and (max-width: 1240px) and (min-width: 930px) {
+    .container, .my-5 {
+        max-width: 80%;
+    }
+}
+
+@media screen and (max-width: 930px) and (min-width: 768px) {
     .col-md-10 {
         flex: 0 0 auto;
         width: 100%;
     }
-}
 
-@media (min-width: 1240px) {
-    .col-md-10 {
-        flex: 0 0 auto;
-        width: 75%;
+    .container, .my-5 {
+        max-width: 85%;
     }
 }

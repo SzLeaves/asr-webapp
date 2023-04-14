@@ -173,22 +173,19 @@ hr + p {
 }
 
 @media screen and (min-width: 1240px) {
-    .container,
-    .my-5 {
+    .container, .my-5 {
         max-width: 45%;
     }
 }
 
 @media screen and (max-width: 1240px) and (min-width: 930px) {
-    .container,
-    .my-5 {
+    .container, .my-5 {
         max-width: 55%;
     }
 }
 
 @media screen and (max-width: 450px) {
-    .container,
-    .my-5 {
+    .container, .my-5 {
         max-width: 100%;
     }
 

@@ -18,12 +18,11 @@ class ChatConsumer(WebsocketConsumer):
         客户端请求websocket连接
         """
         isSuccess = False
+        # 获取当前用户
         user = self.scope['user']
 
         # 初始化会话状态
         if len(self.scope['url_route']['kwargs']) == 0:
-            # 获取当前用户
-
             # 获取用户会话
             userSession = Conversation.objects.filter(username=user)
             if len(userSession) == 0:

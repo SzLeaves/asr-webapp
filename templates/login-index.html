@@ -12,7 +12,7 @@
             $tips.addClass("alert-success");
             $tips.fadeIn('slow');
             setInterval(function () {
-                window.location.reload();
+                window.location.replace("{% url 'users:login' %}");
             }, 1000)
         }
     </script>
