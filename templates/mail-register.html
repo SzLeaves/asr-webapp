@@ -3,5 +3,5 @@
 {% block header %}注册账号{% endblock %}
 
 {% block main %}
-    <p>您好，{{ addressee|default:"" }}</p><p>请点击该链接完成账户注册激活：<br>{{ code|default:"" }}</p>
+    <p>您好，{{ addressee|default:"" }}</p><p>请复制访问该链接完成账户注册激活：<br><a>{{ code|default:"" }}</a></p>
 {% endblock %}

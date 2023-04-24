@@ -3,5 +3,5 @@
 {% block header %}忘记密码{% endblock %}
 
 {% block main %}
-    <p>您好，{{ addressee|default:"" }}</p><p>请点击该链接完成密码重置：<br>{{ code|default:"" }}</p>
+    <p>您好，{{ addressee|default:"" }}</p><p>请复制访问该链接完成密码重置：<br><a>{{ code|default:"" }}</a></p>
 {% endblock %}
