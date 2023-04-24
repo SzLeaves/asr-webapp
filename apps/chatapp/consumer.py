@@ -60,24 +60,24 @@ class ChatConsumer(WebsocketConsumer):
         """
         触发前端响应,获取bot响应返回前端
         """
-        # 缓存用户消息数据
-        self.scope['cache'].lpush(
-            self.scope['conversation'].sessionId,
-            dumps({"sender": "user", "text": message['text'], "sendTime": ChatConsumer.getTimeStamp()})
-        )
 
         # 调用Bot API
         try:
             isSuccess, botMessage = self.getBotMessages(message['text'])
             if isSuccess:
+                # 缓存用户消息数据
+                self.scope['cache'].lpush(
+                    self.scope['conversation'].sessionId,
+                    dumps({"sender": "user", "text": message['text'], "sendTime": ChatConsumer.getTimeStamp()})
+                )
                 # 缓存Bot返回消息数据
                 self.scope['cache'].lpush(
                     self.scope['conversation'].sessionId,
                     dumps({"sender": "bot", "text": botMessage, "sendTime": ChatConsumer.getTimeStamp()})
                 )
-
                 # 返回调用内容结果
                 self.send(ChatConsumer.getResponseContent(botMessage))
+
             else:
                 self.send(ChatConsumer.getResponseContent(botMessage))
         except Exception as e:
@@ -137,15 +137,19 @@ class ChatConsumer(WebsocketConsumer):
         responses = requests.post(url=BOT_API_URL, timeout=120,
                                   data=dumps(self.scope['messages_payload']), headers=BOT_API_HEADERS)
         endTime = time() - startTime
-        # response text
-        botMessge = loads(responses.text)['choices'][0]['message']['content']
 
         if responses.status_code == 200:
+            # response text
+            botMessge = loads(responses.text)['choices'][0]['message']['content']
             logger.info(self.scope['user'].email + ' 请求成功, 耗时: %.2fs' % endTime)
             self.scope['messages_payload']['messages'].extend([{'role': 'assistant', 'content': botMessge}])
             return True, botMessge
-
-        return False, botMessge
+        else:
+            botMessage = responses.text
+            logger.warning(
+                self.scope['user'].email + ' 请求失败 [%d], 耗时: %.2fs %s' % (responses.status_code, endTime, botMessage)
+            )
+            return False, botMessage
 
     @staticmethod
     def getTimeStamp():
