@@ -128,7 +128,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "asrapp",
         "HOST": CONFIG['DATABASE']['MYSQL']['HOST'],
-        "PORT": CONFIG['DATABASES']['MYSQL']['PORT'],
+        "PORT": CONFIG['DATABASE']['MYSQL']['PORT'],
         "USER": CONFIG['DATABASE']['MYSQL']['USER'],
         "PASSWORD": CONFIG['DATABASE']['MYSQL']['PASSWORD'],
     }
