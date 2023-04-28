@@ -47,7 +47,7 @@ def decodeAndPredict(filePath):
     input_length = np.array((feature.shape[1],))
 
     # 解码
-    decode_res = ctc_decode(pred, input_length, greedy=True, beam_width=100, top_paths=1)
+    decode_res = ctc_decode(pred, input_length, greedy=True)
     # 获取预测的序列数组, 筛选有效值 (> -1)
     pred_index = get_value(decode_res[0][0])
     pred_index = [item for item in pred_index[0] if item > -1]
