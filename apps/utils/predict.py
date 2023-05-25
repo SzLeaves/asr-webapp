@@ -41,7 +41,7 @@ def loadMfcc(filePath, mfccValue, sampleRate=16000):
 def decodeAndPredict(filePath):
     # 语音识别模型预测文本 (expand_dims用于增加维度匹配模型输入)
     feature = loadMfcc(filePath, mfccValue=32)
-    pred = ASR_MODEL.predict(np.expand_dims(feature, axis=0))
+    pred = ASR_MODEL.predict(np.expand_dims(feature, axis=0), verbose=0)
 
     # 音频帧数
     input_length = np.array((feature.shape[1],))
