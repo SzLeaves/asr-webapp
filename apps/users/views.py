@@ -107,9 +107,13 @@ class UserResetPasswordView(View):
     """
 
     def get(self, request, verify_code):
-        savedRecord = EmailVerifyRecord.objects.get(code=verify_code)
-        user = UserProfile.objects.get(email=savedRecord.addressee)
-        return render(request, "login-reset.html", {"email": user.email})
+        savedRecord = EmailVerifyRecord.objects.filter(code=verify_code)
+        if len(savedRecord) == 1:
+            user = UserProfile.objects.get(email=savedRecord[0].addressee)
+            return render(request, "login-reset.html", {"email": user.email})
+
+        # 验证码失效时重定向回登录页
+        return redirect("users:login")
 
     def post(self, request, verify_code):
         savedRecord = EmailVerifyRecord.objects.filter(code=verify_code)
