@@ -24,6 +24,7 @@ DEBUG = True
 # 日志输出模块设置
 LOGGING = {
     'version': 1,
+    'encoding': 'utf-8',
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
