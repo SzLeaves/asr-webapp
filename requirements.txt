@@ -2,6 +2,7 @@ requests
 daphne
 channels
 channels-redis
+colorlog
 Django
 pymysql
 mysqlclient
