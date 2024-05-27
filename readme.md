@@ -1,5 +1,6 @@
 # ASR Web APP
-中文语音识别实验室APP，使用Django构建，包含中文语音转文字与中文语音聊天机器人模块
+中文语音识别实验室APP，使用Django构建，包含中文语音转文字与中文语音聊天机器人模块  
+**本项目的语音识别模型为自建：[asr-model-ctc](https://github.com/SzLeaves/asr-model-ctc)**
 
 ## 技术框架
 * Django:    后端框架
